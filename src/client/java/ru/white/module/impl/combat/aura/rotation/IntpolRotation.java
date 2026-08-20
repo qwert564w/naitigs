@@ -186,8 +186,9 @@ public class IntpolRotation implements RotationAura {
         Box hitbox = target.getBoundingBox();
         Vec3d center = hitbox.getCenter();
         
-        double width = hitbox.getXLength();
-        double height = hitbox.getYLength();
+        // Вычисляем размеры из координат бокса
+        double width = hitbox.maxX - hitbox.minX;
+        double height = hitbox.maxY - hitbox.minY;
         
         double xOff = (random.nextDouble() - 0.5) * width * 0.6;
         double yOff = (random.nextDouble() - 0.5) * height * 0.4 + height * 0.1;
