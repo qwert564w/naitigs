@@ -1,6 +1,7 @@
 package ru.white.module.impl.combat.aura.rotation;
 
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import ru.white.manager.rotation.Rotation;
@@ -182,17 +183,19 @@ public class IntpolRotation implements RotationAura {
     }
     
     private float[] getFloatingHitPoint(LivingEntity target) {
-        Vec3d targetPos = target.getPos();
-        float width = target.getWidth();
-        float height = target.getHeight();
+        Box hitbox = target.getBoundingBox();
+        Vec3d center = hitbox.getCenter();
+        
+        double width = hitbox.getXLength();
+        double height = hitbox.getYLength();
         
         double xOff = (random.nextDouble() - 0.5) * width * 0.6;
         double yOff = (random.nextDouble() - 0.5) * height * 0.4 + height * 0.1;
         double zOff = (random.nextDouble() - 0.5) * width * 0.6;
         
-        double hitX = targetPos.x + xOff;
-        double hitY = targetPos.y + height * 0.5 + yOff;
-        double hitZ = targetPos.z + zOff;
+        double hitX = center.x + xOff;
+        double hitY = center.y + yOff;
+        double hitZ = center.z + zOff;
         
         Vec3d eyePos = mc.player.getEyePos();
         double dx = hitX - eyePos.x;
