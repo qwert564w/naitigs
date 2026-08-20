@@ -27,6 +27,12 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew build
       
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-artifacts
+        path: build/libs/*.jar
+        
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
@@ -39,18 +45,17 @@ jobs:
           ## 🎮 Intpol Rotation System Release
           
           ### ✨ Features:
-          - 30+ easing functions for unpredictable rotation patterns
-          - Adaptive speed based on distance and player state
-          - Floating hitbox points (never hits same spot twice)
-          - Overrotation and micro-tremor for human-like behavior
-          - Anti-detection features for AAC/Grim/Matrix bypass
+          - 30+ easing functions для непредсказуемых паттернов ротации
+          - Адаптивная скорость на основе дистанции и состояния игрока
+          - Плавающие точки хитбокса (никогда не бьёт в одно место)
+          - Overrotation и micro-tremor для человеческого поведения
+          - Anti-detection для обхода AAC/Grim/Matrix
           
           ### 📝 Changelog:
-          - Fixed mc.player.distanceTo() bug
-          - Fixed Java version requirement (now uses Java 21)
-          - Removed Windows-specific tmpdir path
-          - All easing functions working correctly
-          - Adaptive speed logic verified
+          - Исправлен баг `target.getPos()` → `target.getBoundingBox()`
+          - Исправлен баг `hitbox.getXLength()` → ручное вычисление размеров
+          - Все easing функции работают корректно
+          - Адаптивная скорость проверена
           
         draft: false
         prerelease: false
