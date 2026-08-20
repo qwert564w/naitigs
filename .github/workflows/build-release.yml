@@ -1,0 +1,65 @@
+name: Build and Release
+
+on:
+  push:
+    branches: [ master ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+      
+    - name: Build with Gradle
+      run: ./gradlew build
+      
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ github.run_number }}
+        release_name: Release v${{ github.run_number }} - Intpol Rotation
+        body: |
+          ## 🎮 Intpol Rotation System Release
+          
+          ### ✨ Features:
+          - 30+ easing functions for unpredictable rotation patterns
+          - Adaptive speed based on distance and player state
+          - Floating hitbox points (never hits same spot twice)
+          - Overrotation and micro-tremor for human-like behavior
+          - Anti-detection features for AAC/Grim/Matrix bypass
+          
+          ### 📝 Changelog:
+          - Fixed mc.player.distanceTo() bug
+          - Verified all easing functions
+          - Cleaned up code
+          
+        draft: false
+        prerelease: false
+        
+    - name: Upload Release Asset
+      id: upload-release-asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./build/libs/*.jar
+        asset_name: naitigs-intpol.jar
+        asset_content_type: application/java-archive
