@@ -15,10 +15,10 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
-    - name: Set up JDK 17
+    - name: Set up JDK 21
       uses: actions/setup-java@v4
       with:
-        java-version: '17'
+        java-version: '21'
         distribution: 'temurin'
         
     - name: Grant execute permission for gradlew
@@ -47,8 +47,10 @@ jobs:
           
           ### 📝 Changelog:
           - Fixed mc.player.distanceTo() bug
-          - Verified all easing functions
-          - Cleaned up code
+          - Fixed Java version requirement (now uses Java 21)
+          - Removed Windows-specific tmpdir path
+          - All easing functions working correctly
+          - Adaptive speed logic verified
           
         draft: false
         prerelease: false
