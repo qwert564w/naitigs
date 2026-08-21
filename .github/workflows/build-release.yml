@@ -40,8 +40,8 @@ jobs:
     - name: Create Release and Upload Assets
       uses: softprops/action-gh-release@v1
       with:
-        tag_name: v${{ github.run_number }}
-        name: Release v${{ github.run_number }} - Intpol Rotation
+        tag_name: night-tut
+        name: night tut
         body: |
           ## 🎮 Intpol Rotation System Release
           
