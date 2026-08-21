@@ -1,0 +1,78 @@
+name: Build and Release
+
+on:
+  push:
+    branches: [ master ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+      
+    - name: Build with Gradle
+      run: ./gradlew build
+      
+    - name: List build files
+      run: ls -la build/libs/
+      
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-jars
+        path: build/libs/*.jar
+        retention-days: 7
+        
+    - name: Create Release and Upload Assets
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: v${{ github.run_number }}
+        name: Release v${{ github.run_number }} - Minecraft 1.21.4
+        body: |
+          ## 🎮 ТЦК Client для Minecraft 1.21.4
+          
+          ### ✨ Что нового:
+          - Миграция с **1.21.11** на **1.21.4**
+          - Совместимость с **FunTime** (play.funtime.su)
+          - 30+ easing functions для непредсказуемых паттернов ротации
+          - Адаптивная скорость на основе дистанции и состояния игрока
+          - Плавающие точки хитбокса
+          - Overrotation и micro-tremor
+          - Anti-detection (AAC/Grim/Matrix)
+          
+          ### 📋 Changelog:
+          - ✅ Обновлён до Minecraft 1.21.4
+          - ✅ Fabric API 0.110.5+1.21.4
+          - ✅ Yarn mappings 1.21.4+build.1
+          - ✅ Все баги исправлены
+          
+          ### 🔧 Как использовать:
+          1. Скачай JAR из Assets
+          2. Кидай в папку `mods` с Fabric Loader 0.16.9+
+          3. Установи Fabric API для 1.21.4
+          4. Заходи на сервер и выбирай ротацию "AdvancedIntpol" в KillAura
+          
+          ### ⚠️ Совместимость:
+          - Minecraft: **1.21.4**
+          - Loader: **Fabric 0.16.9+**
+          - API: **Fabric API 0.110.5+1.21.4**
+          
+          **Приятной игры! 💪🔥**
+        files: |
+          build/libs/*.jar
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
