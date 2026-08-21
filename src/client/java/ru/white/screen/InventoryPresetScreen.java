@@ -1,6 +1,6 @@
 package ru.white.screen;
 
-import net.minecraft.client.gui.Click;
+// Click removed in 1.21.4
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.input.CharInput;
@@ -330,7 +330,7 @@ public final class InventoryPresetScreen extends Screen implements ru.white.util
     }
 
     @Override
-    public boolean mouseClicked(Click click, boolean doubled) {
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (click.button() != 0) return super.mouseClicked(click, doubled);
 
         float mx = (float) (click.x() / scaleFix);
