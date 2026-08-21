@@ -9,7 +9,7 @@ import ru.white.utils.render.*;
 import ru.white.utils.render.font.Font;
 import ru.white.utils.render.font.Fonts;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.gui.Click;
+// Click removed in 1.21.4
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
@@ -244,7 +244,7 @@ public class MainMenuScreen extends Screen implements IMinecraft {
     }
 
     @Override
-    public boolean mouseClicked(Click click, boolean doubled) {
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
         float mouseX = (float) (click.x() / scaleFix);
         float mouseY = (float) (click.y() / scaleFix);
         int button = click.button();
@@ -271,7 +271,7 @@ public class MainMenuScreen extends Screen implements IMinecraft {
     }
 
     @Override
-    public boolean mouseDragged(Click click, double deltaX, double deltaY) {
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         if (exitSlideDragging) {
             lastMouseX = click.x() / scaleFix;
             lastMouseY = click.y() / scaleFix;
@@ -283,7 +283,7 @@ public class MainMenuScreen extends Screen implements IMinecraft {
     }
 
     @Override
-    public boolean mouseReleased(Click click) {
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
         if (exitSlideDragging) {
             lastMouseX = click.x() / scaleFix;
             lastMouseY = click.y() / scaleFix;
