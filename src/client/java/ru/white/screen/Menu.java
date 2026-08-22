@@ -19,8 +19,6 @@ import ru.white.module.api.settings.impl.ModeSetting;
 import ru.white.module.api.settings.impl.MultiBooleanSetting;
 import ru.white.module.api.settings.impl.SliderSetting;
 import ru.white.module.api.settings.impl.StringSetting;
-import net.minecraft.client.input.CharInput;
-import net.minecraft.client.input.KeyInput;
 import ru.white.screen.editor.OverlayEditor;
 import ru.white.screen.editor.OverlayEditors;
 import ru.white.utils.animation.Animation;
@@ -35,7 +33,6 @@ import ru.white.utils.math.MathUtil;
 import ru.white.utils.other.GuiMusicPlayer;
 import ru.white.utils.other.GuiSounds;
 import ru.white.utils.render.*;
-import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.RenderTickCounter;
@@ -1258,14 +1255,14 @@ public class Menu extends Screen implements IMinecraft {
     }
 
     @Override
-    public boolean charTyped(CharInput input) {
+    public boolean charTyped(char chr, int modifiers) {
         if (searchActive) {
-            if (input.isValidChar() && searchQuery.length() < SEARCH_LIMIT) { searchQuery += input.asString(); searchChanged(); GuiSounds.type(); }
+            if (isValidChar(chr) && searchQuery.length() < SEARCH_LIMIT) { searchQuery += String.valueOf(chr); searchChanged(); GuiSounds.type(); }
             return true;
         }
         if (activeString != null) {
-            if (input.isValidChar()) {
-                String str = input.asString();
+            if (isValidChar(chr)) {
+                String str = String.valueOf(chr);
                 if (!activeString.isOnlyNumber() || str.matches("[0-9.,-]+")) { stringBuffer += str; GuiSounds.type(); }
             }
             return true;
@@ -1308,5 +1305,9 @@ public class Menu extends Screen implements IMinecraft {
         OverlayEditor editor = OverlayEditors.active();
         if (editor != null) { editor.saveAndExit(); return false; }
         if (!exit) { glomalAnim.run(0, 0.3F, Easings.SINE_IN); exit = true; GuiSounds.close(); } return false;
+    }
+
+    private boolean isValidChar(char chr) {
+        return chr >= 32 && chr != 127;
     }
 }
