@@ -39,7 +39,7 @@ repositories {
             artifact()
         }
     }
-    mavencentral()
+    mavenCentral()
 }
 
 
