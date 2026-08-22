@@ -4,27 +4,18 @@
   "version": "1.0.0",
   "name": "Nightix",
   "description": "Minecraft Client",
-  "authors": [
-    "qwert564w"
-  ],
-  "contact": {
-    "homepage": "",
-    "issues": ""
-  },
+  "authors": ["qwert564w"],
+  "contact": {},
   "license": "MIT",
   "environment": "client",
   "entrypoints": {
-    "client": [
-      "ru.white.Client"
-    ]
+    "client": ["ru.white.Client"]
   },
-  "mixins": [
-    "client.mixins.json"
-  ],
+  "mixins": ["client.mixins.json"],
   "depends": {
     "fabricloader": ">=0.16.9",
     "fabric-api": "*",
-    "minecraft": "~1.21.5",
+    "minecraft": "~1.21.4",
     "java": ">=21"
   }
 }
