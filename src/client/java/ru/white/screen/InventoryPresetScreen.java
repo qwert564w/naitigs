@@ -1,10 +1,7 @@
 package ru.white.screen;
 
-// Click removed in 1.21.4
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.input.CharInput;
-import net.minecraft.client.input.KeyInput;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
@@ -331,10 +328,10 @@ public final class InventoryPresetScreen extends Screen implements ru.white.util
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (click.button() != 0) return super.mouseClicked(click, doubled);
+        if (button != 0) return super.mouseClicked(mouseX, mouseY, button);
 
-        float mx = (float) (click.x() / scaleFix);
-        float my = (float) (click.y() / scaleFix);
+        float mx = (float) (mouseX / scaleFix);
+        float my = (float) (mouseY / scaleFix);
 
         float inputX = panelX + 10;
         float inputW = LEFT_W - 20;
@@ -379,33 +376,37 @@ public final class InventoryPresetScreen extends Screen implements ru.white.util
     }
 
     @Override
-    public boolean keyPressed(KeyInput input) {
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (focused) {
-            if (input.key() == GLFW.GLFW_KEY_ENTER) {
+            if (keyCode == GLFW.GLFW_KEY_ENTER) {
                 saveCurrent();
-            } else if (input.key() == GLFW.GLFW_KEY_BACKSPACE && !name.isEmpty()) {
+            } else if (keyCode == GLFW.GLFW_KEY_BACKSPACE && !name.isEmpty()) {
                 name = name.substring(0, name.length() - 1);
-            } else if (input.key() == GLFW.GLFW_KEY_ESCAPE) {
+            } else if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
                 focused = false;
             }
             return true;
         }
 
-        if (input.key() == GLFW.GLFW_KEY_ESCAPE) {
+        if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
             client.setScreen(parent);
             return true;
         }
 
-        return super.keyPressed(input);
+        return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
     @Override
-    public boolean charTyped(CharInput input) {
-        if (focused && input.isValidChar() && name.length() < 32) {
-            name += input.asString();
+    public boolean charTyped(char chr, int modifiers) {
+        if (focused && isValidChar(chr) && name.length() < 32) {
+            name += chr;
             return true;
         }
-        return super.charTyped(input);
+        return super.charTyped(chr, modifiers);
+    }
+
+    private boolean isValidChar(char chr) {
+        return chr >= 32 && chr != 127; // Простая проверка валидности символа
     }
 
     @Override
