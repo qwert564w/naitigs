@@ -994,17 +994,17 @@ public class Menu extends Screen implements IMinecraft {
     private void closeCheck() { if (exit && glomalAnim.isFinished()) { close(); GuiMusicPlayer.stop(); exit = false; } }
 
     @Override
-    public boolean mouseClicked(Click click, boolean doubled) {
-        float mouseX = (int) (click.x() / scaleFix);
-        float mouseY = (int) (click.y() / scaleFix);
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        float mouseX = (int) (mouseX / scaleFix);
+        float mouseY = (int) (mouseY / scaleFix);
 
         OverlayEditor editor = OverlayEditors.active();
-        if (editor != null) { return editor.mouseClicked(mouseX, mouseY, click.button()); }
+        if (editor != null) { return editor.mouseClicked(mouseX, mouseY, button); }
 
         if (bindingModule != null) { bindingModule = null; GuiSounds.bindReset(); return true; }
 
         if (activeBind != null) {
-            if (activeBind.allowMouse && click.button() != 0 && click.button() != 1) { activeBind.set(click.button()); GuiSounds.bindSet(); }
+            if (activeBind.allowMouse && button != 0 && button != 1) { activeBind.set(button); GuiSounds.bindSet(); }
             else { GuiSounds.bindReset(); }
             activeBind = null; return true;
         }
@@ -1028,8 +1028,8 @@ public class Menu extends Screen implements IMinecraft {
         float yps = y + 6 * S;
 
         if (MathUtil.isHovered(mouseX, mouseY, xps, yps, 140 * S, 20 * S)) {
-            if (click.button() == 1) { clearSearch(); searchActive = false; GuiSounds.searchClear(); }
-            else if (click.button() == 0) { if (!searchActive) GuiSounds.editStart(); searchActive = true; searchTypeTime = System.currentTimeMillis(); }
+            if (button == 1) { clearSearch(); searchActive = false; GuiSounds.searchClear(); }
+            else if (button == 0) { if (!searchActive) GuiSounds.editStart(); searchActive = true; searchTypeTime = System.currentTimeMillis(); }
             return true;
         }
 
@@ -1040,7 +1040,7 @@ public class Menu extends Screen implements IMinecraft {
         int themeIndex = 0;
 
         for (Theme theme : themes) {
-            if (MathUtil.isHovered(mouseX, mouseY, xtd, ytd, 8 * S, 8 * S) && click.button() == 0) {
+            if (MathUtil.isHovered(mouseX, mouseY, xtd, ytd, 8 * S, 8 * S) && button == 0) {
                 animation14.reset(); preSelectedTheme = selectedTheme; selectedTheme = theme;
                 Client.get().guiManager().setGuiTheme(theme); GuiSounds.theme(themeIndex, themes.length);
             }
@@ -1055,7 +1055,7 @@ public class Menu extends Screen implements IMinecraft {
         int catIndex = 0;
 
         for (Category category : Category.values()) {
-            if (MathUtil.isHovered(mouseX, mouseY, xPanelMini + (30 * S) / 2 - (16 * S) / 2, cy, 16 * S, 16 * S) && click.button() == 0 && (active != category || searching())) {
+            if (MathUtil.isHovered(mouseX, mouseY, xPanelMini + (30 * S) / 2 - (16 * S) / 2, cy, 16 * S, 16 * S) && button == 0 && (active != category || searching())) {
                 clearSearch();
                 if (active != category) { active = category; animCategoryReset.reset(); }
                 scrollTarget = 0; GuiSounds.category(catIndex, Category.values().length);
@@ -1080,12 +1080,12 @@ public class Menu extends Screen implements IMinecraft {
                     float keyW = draw.getWidth(keyName, 6 * S) + 9 * S;
                     float keyX = xModule + 130 * S - 14 * S - 5 * S - 5 * S - keyW;
 
-                    if (MathUtil.isHovered(mouseX, mouseY, keyX - 2 * S, yModule + 2F * S, keyW + 4 * S, 14 * S) && click.button() == 0) {
+                    if (MathUtil.isHovered(mouseX, mouseY, keyX - 2 * S, yModule + 2F * S, keyW + 4 * S, 14 * S) && button == 0) {
                         bindingModule = f; GuiSounds.bindStart(); return true;
                     }
-                    if (click.button() == 2) { bindingModule = f; GuiSounds.bindStart(); return true; }
-                    if (click.button() == 0) { f.setEnabled(!f.isEnabled()); }
-                    if (click.button() == 1) { select = (f == select) ? null : f; settingScrollTarget = 0; settingScrollAnim = 0; GuiSounds.expand(select == f); }
+                    if (button == 2) { bindingModule = f; GuiSounds.bindStart(); return true; }
+                    if (button == 0) { f.setEnabled(!f.isEnabled()); }
+                    if (button == 1) { select = (f == select) ? null : f; settingScrollTarget = 0; settingScrollAnim = 0; GuiSounds.expand(select == f); }
                 }
                 yModule += (moduleH + 5 * S) * canim1;
             }
@@ -1105,7 +1105,7 @@ public class Menu extends Screen implements IMinecraft {
                 if (setting instanceof SliderSetting s) {
                     float vis = visAnim(select, s);
                     if (vis > 0.01F) {
-                        if (s.getVisible().get() && click.button() == 0 && MathUtil.isHovered(mouseX, mouseY, xST + 3 * S, yST + 11 * S, wST - 6 * S, 13 * S)) {
+                        if (s.getVisible().get() && button == 0 && MathUtil.isHovered(mouseX, mouseY, xST + 3 * S, yST + 11 * S, wST - 6 * S, 13 * S)) {
                             draggingSlider = s; GuiSounds.sliderGrab();
                         }
                         yST += 30 * S * vis;
@@ -1115,7 +1115,7 @@ public class Menu extends Screen implements IMinecraft {
                     float vis = visAnim(select, s);
                     if (vis > 0.01F) {
                         float hMode = 15 * S + modeChipsHeight(s, wST - 12 * S) + 4 * S;
-                        if (s.getVisible().get() && click.button() == 0) {
+                        if (s.getVisible().get() && button == 0) {
                             float chipMaxW = wST - 12 * S; float px = 0, py = 0; int chipIndex = 0;
                             for (String val : s.values) {
                                 float tw = draw.getWidth(val, 6 * S) + 8 * S;
@@ -1133,7 +1133,7 @@ public class Menu extends Screen implements IMinecraft {
                     float vis = visAnim(select, s);
                     if (vis > 0.01F) {
                         float hMulti = 15 * S + multiChipsHeight(s, wST - 12 * S) + 4 * S;
-                        if (s.getVisible().get() && click.button() == 0) {
+                        if (s.getVisible().get() && button == 0) {
                             float chipMaxW = wST - 12 * S; float px = 0, py = 0;
                             for (BooleanSetting b : s.getValues()) {
                                 float tw = draw.getWidth(b.getName(), 6 * S) + 8 * S;
@@ -1148,21 +1148,21 @@ public class Menu extends Screen implements IMinecraft {
                 if (setting instanceof BooleanSetting s) {
                     float vis = visAnim(select, s);
                     if (vis > 0.01F) {
-                        if (s.getVisible().get() && click.button() == 0 && MathUtil.isHovered(mouseX, mouseY, xST, yST, wST, 16 * S)) { s.set(!s.getValue()); GuiSounds.toggle(s.getValue()); }
+                        if (s.getVisible().get() && button == 0 && MathUtil.isHovered(mouseX, mouseY, xST, yST, wST, 16 * S)) { s.set(!s.getValue()); GuiSounds.toggle(s.getValue()); }
                         yST += 21 * S * vis;
                     }
                 }
                 if (setting instanceof ButtonSetting s) {
                     float vis = visAnim(select, s);
                     if (vis > 0.01F) {
-                        if (s.getVisible().get() && click.button() == 0 && MathUtil.isHovered(mouseX, mouseY, xST, yST, wST, 16 * S)) { s.press(); GuiSounds.button(); }
+                        if (s.getVisible().get() && button == 0 && MathUtil.isHovered(mouseX, mouseY, xST, yST, wST, 16 * S)) { s.press(); GuiSounds.button(); }
                         yST += 21 * S * vis;
                     }
                 }
                 if (setting instanceof BindSetting s) {
                     float vis = visAnim(select, s);
                     if (vis > 0.01F) {
-                        if (s.getVisible().get() && click.button() == 0) {
+                        if (s.getVisible().get() && button == 0) {
                             String keyName = s.get() == -1 ? "n/a" : Keyboard.keyName(s.get());
                             float bw = draw.getWidth(keyName, 6 * S) + 10 * S;
                             if (MathUtil.isHovered(mouseX, mouseY, xST + wST - 6 * S - bw - 2 * S, yST + 1 * S, bw + 4 * S, 14 * S)) { activeBind = s; GuiSounds.bindStart(); }
@@ -1173,7 +1173,7 @@ public class Menu extends Screen implements IMinecraft {
                 if (setting instanceof StringSetting s) {
                     float vis = visAnim(select, s);
                     if (vis > 0.01F) {
-                        if (s.getVisible().get() && click.button() == 0) {
+                        if (s.getVisible().get() && button == 0) {
                             String shown = s.getValue().isEmpty() ? "..." : s.getValue();
                             float bw = Math.min(draw.getWidth(shown, 6 * S) + 10 * S, wST * 0.55F);
                             if (MathUtil.isHovered(mouseX, mouseY, xST + wST - 6 * S - bw - 2 * S, yST + 1 * S, bw + 4 * S, 14 * S)) { activeString = s; stringBuffer = s.getValue(); GuiSounds.editStart(); }
@@ -1186,7 +1186,7 @@ public class Menu extends Screen implements IMinecraft {
                     if (vis > 0.01F) {
                         float open = s.pickerAnim.getOutput();
                         float hCol = 16 * S + open * 35 * S;
-                        if (s.getVisible().get() && click.button() == 0) {
+                        if (s.getVisible().get() && button == 0) {
                             if (MathUtil.isHovered(mouseX, mouseY, xST, yST, wST, 16 * S)) { s.pickerOpen = !s.pickerOpen; GuiSounds.picker(s.pickerOpen); }
                             else if (s.pickerOpen) {
                                 for (int bar = 0; bar < 3; bar++) {
@@ -1200,28 +1200,28 @@ public class Menu extends Screen implements IMinecraft {
                 }
             }
         }
-        return super.mouseClicked(click, doubled);
+        return super.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override
-    public boolean mouseDragged(Click click, double deltaX, double deltaY) {
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         OverlayEditor editor = OverlayEditors.active();
         if (editor != null) { return editor.mouseDragged((float) (deltaX / scaleFix), (float) (deltaY / scaleFix)); }
         return super.mouseDragged(click, deltaX, deltaY);
     }
 
     @Override
-    public boolean mouseReleased(Click click) {
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
         OverlayEditor editor = OverlayEditors.active();
-        if (editor != null) { return editor.mouseReleased(click.button()); }
+        if (editor != null) { return editor.mouseReleased(button); }
         if (draggingSlider != null || draggingColor != null) GuiSounds.sliderRelease();
         draggingSlider = null; draggingColor = null;
         return super.mouseReleased(click);
     }
 
     @Override
-    public boolean keyPressed(KeyInput input) {
-        int key = input.key();
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        int key = keyCode;
         OverlayEditor editor = OverlayEditors.active();
         if (editor != null) { if (key == 256) editor.saveAndExit(); return true; }
 
