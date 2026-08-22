@@ -27,6 +27,10 @@ import static net.minecraft.util.math.MathHelper.wrapDegrees;
 
 public class RotationProcess extends Component {
 
+    public enum RotationTask {
+        IDLE, COMBAT, MOVEMENT
+    }
+    
     public static RotationTask currentTask = RotationTask.IDLE;
     public static float currentYawSpeed;
     public static float currentPitchSpeed;
@@ -36,22 +40,14 @@ public class RotationProcess extends Component {
     }
     
     @EventHandler
-    public void onTick(EventTick event) {
-        // Упрощённая реализация для 1.21.4
-    }
+    public void onTick(EventTick event) {}
     
     @EventHandler
-    public void onRender3D(EventRender3D event) {
-        // Упрощённая реализация для 1.21.4
-    }
+    public void onRender3D(EventRender3D event) {}
     
     @EventHandler
-    public void onMoveInput(EventMoveInput event) {
-        // Упрощённая реализация для 1.21.4
-    }
+    public void onMoveInput(EventMoveInput event) {}
     
     @EventHandler
-    public void onWorldLoad(WorldLoadEvent event) {
-        // Упрощённая реализация для 1.21.4
-    }
+    public void onWorldLoad(WorldLoadEvent event) {}
 }
