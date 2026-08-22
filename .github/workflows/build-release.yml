@@ -40,23 +40,36 @@ jobs:
     - name: Create Release and Upload Assets
       uses: softprops/action-gh-release@v1
       with:
-        tag_name: night-tut
-        name: night tut
+        tag_name: v${{ github.run_number }}
+        name: Release v${{ github.run_number }} - Minecraft 1.21.4
         body: |
-          ## 🎮 Intpol Rotation System Release
+          ## 🎮 Nightix Client для Minecraft 1.21.4
           
-          ### ✨ Features:
-          - 30+ easing functions для непредсказуемых паттернов ротации
-          - Адаптивная скорость на основе дистанции и состояния игрока
-          - Плавающие точки хитбокса (никогда не бьёт в одно место)
-          - Overrotation и micro-tremor для человеческого поведения
-          - Anti-detection для обхода AAC/Grim/Matrix
+          ### ✨ Что нового:
+          - Миграция на **1.21.4**
+          - Совместимость с **FunTime** (play.funtime.su)
+          - Продвинутые ротации для обхода античита
+          - Адаптивная скорость на основе дистанции
+          - Anti-detection (AAC/Grim/Matrix)
           
-          ### 📝 Changelog:
-          - Исправлен баг `target.getPos()` → `target.getBoundingBox()`
-          - Исправлен баг `hitbox.getXLength()` → ручное вычисление размеров
-          - Все easing функции работают корректно
-          - Адаптивная скорость проверена
+          ### 📋 Changelog:
+          - ✅ Обновлён до Minecraft 1.21.4
+          - ✅ Fabric API 0.110.5+1.21.4
+          - ✅ Yarn mappings 1.21.4+build.5
+          - ✅ Исправлены баги сборки
+          
+          ### 🔧 Как использовать:
+          1. Скачай JAR из Assets
+          2. Кидай в папку `mods` с Fabric Loader 0.16.9+
+          3. Установи Fabric API для 1.21.4
+          4. Заходи на сервер и играй!
+          
+          ### ⚠️ Совместимость:
+          - Minecraft: **1.21.4**
+          - Loader: **Fabric 0.16.9+**
+          - API: **Fabric API 0.110.5+1.21.4**
+          
+          **Приятной игры! 💪🔥**
         files: |
           build/libs/*.jar
       env:
