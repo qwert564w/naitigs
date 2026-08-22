@@ -396,9 +396,9 @@ public class AltManagerScreen extends Screen implements IMinecraft {
     private float mouseY() { return mouseY; }
 
     @Override
-    public boolean mouseClicked(Click click, boolean doubled) {
-        float mx = (float) (click.x() / scaleFix);
-        float my = (float) (click.y() / scaleFix);
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        float mx = (float) (mouseX / scaleFix);
+        float my = (float) (mouseY / scaleFix);
         if (button != 0) return super.mouseClicked(mouseX, mouseY, button);
 
         boolean inSide = settingsOpen && MathUtil.isHovered(mx, my, sideX, sideY, sideW, sideH);
@@ -468,7 +468,7 @@ public class AltManagerScreen extends Screen implements IMinecraft {
             }
         }
 
-        return super.mouseClicked(click, doubled);
+        return super.mouseClicked(mouseX, mouseY, button);
     }
 
     private void tryAdd() {
