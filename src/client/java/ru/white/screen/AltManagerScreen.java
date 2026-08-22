@@ -1,10 +1,7 @@
 package ru.white.screen;
 
-import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.input.CharInput;
-import net.minecraft.client.input.KeyInput;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
@@ -402,7 +399,7 @@ public class AltManagerScreen extends Screen implements IMinecraft {
     public boolean mouseClicked(Click click, boolean doubled) {
         float mx = (float) (click.x() / scaleFix);
         float my = (float) (click.y() / scaleFix);
-        if (click.button() != 0) return super.mouseClicked(click, doubled);
+        if (button != 0) return super.mouseClicked(mouseX, mouseY, button);
 
         boolean inSide = settingsOpen && MathUtil.isHovered(mx, my, sideX, sideY, sideW, sideH);
 
@@ -483,8 +480,8 @@ public class AltManagerScreen extends Screen implements IMinecraft {
     }
 
     @Override
-    public boolean keyPressed(KeyInput keyInput) {
-        int key = keyInput.key();
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        int key = keyCode;
         if (baseFocused) {
             if (key == GLFW.GLFW_KEY_ENTER || key == GLFW.GLFW_KEY_ESCAPE) {
                 baseFocused = false;
@@ -512,17 +509,17 @@ public class AltManagerScreen extends Screen implements IMinecraft {
     }
 
     @Override
-    public boolean charTyped(CharInput input) {
-        if (baseFocused && input.isValidChar() && randomBase.length() < 12) {
-            String s = input.asString();
+    public boolean charTyped(char chr, int modifiers) {
+        if (baseFocused && isValidChar(chr) && randomBase.length() < 12) {
+            String s = String.valueOf(chr);
             for (int i = 0; i < s.length(); i++) {
                 char c = s.charAt(i);
                 if (Character.isLetterOrDigit(c) || c == '_') randomBase += c;
             }
             return true;
         }
-        if (inputFocused && input.isValidChar() && inputText.length() < 16) {
-            String s = input.asString();
+        if (inputFocused && isValidChar(chr) && inputText.length() < 16) {
+            String s = String.valueOf(chr);
             for (int i = 0; i < s.length(); i++) {
                 char c = s.charAt(i);
                 if (Character.isLetterOrDigit(c) || c == '_') inputText += c;
@@ -543,4 +540,8 @@ public class AltManagerScreen extends Screen implements IMinecraft {
 
     @Override
     public boolean shouldCloseOnEsc() { return false; }
+
+    private boolean isValidChar(char chr) {
+        return chr >= 32 && chr != 127;
+    }
 }
