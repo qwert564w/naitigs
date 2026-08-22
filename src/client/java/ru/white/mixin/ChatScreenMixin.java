@@ -1,7 +1,5 @@
 package ru.white.mixin;
 
-import net.minecraft.client.gui.Click;
-import net.minecraft.client.input.KeyInput;
 import ru.white.Client;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
