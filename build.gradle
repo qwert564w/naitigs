@@ -39,11 +39,11 @@ repositories {
             artifact()
         }
     }
-    mavenCentral()
+    mavencentral()
 }
 
 
-def bundleLibsInJar = true
+def bundleLibsInJar = project.findProperty('bundle_libs_in_jar')?.toBoolean() ?: true
 
 def mediaPlayerInfo = "dev.redstones.mediaplayerinfo:media-player-info:${media_player_info_version}"
 def kotlinStdlib = "org.jetbrains.kotlin:kotlin-stdlib:${kotlin_version}"
