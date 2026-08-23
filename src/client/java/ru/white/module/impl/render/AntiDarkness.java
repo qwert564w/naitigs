@@ -51,4 +51,4 @@ public class AntiDarkness extends Module {
             mc.player.setFireTicks(0);
         }
     }
-            }
+}
