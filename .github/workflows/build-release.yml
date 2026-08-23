@@ -30,34 +30,34 @@ jobs:
     - name: List build files
       run: ls -la build/libs/
       
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: build-jars
-        path: build/libs/*.jar
-        retention-days: 7
+    - name: Rename JAR
+      run: |
+        JAR_FILE=$(ls build/libs/*.jar | grep -v sources | head -n 1)
+        if [ -n "$JAR_FILE" ]; then
+          mv "$JAR_FILE" "build/libs/Naitigs-1.21.11.jar"
+        fi
         
     - name: Create Release and Upload Assets
       uses: softprops/action-gh-release@v1
       with:
-        tag_name: v${{ github.run_number }}
-        name: Release v${{ github.run_number }} - Intpol Rotation
+        tag_name: v1.0.0
+        name: Naitigs Client v1.0.0 - Minecraft 1.21.11
         body: |
-          ## 🎮 Intpol Rotation System Release
+          ## Changelog
           
-          ### ✨ Features:
-          - 30+ easing functions для непредсказуемых паттернов ротации
-          - Адаптивная скорость на основе дистанции и состояния игрока
-          - Плавающие точки хитбокса (никогда не бьёт в одно место)
-          - Overrotation и micro-tremor для человеческого поведения
-          - Anti-detection для обхода AAC/Grim/Matrix
+          - ✅ Добавлен модуль AntiDarkness
+          - ✅ Убирает эффект тьмы от Вардена
+          - ✅ Убирает визуальный огонь при горении
+          - ✅ Совместимость с Fabric 1.21.11
           
-          ### 📝 Changelog:
-          - Исправлен баг `target.getPos()` → `target.getBoundingBox()`
-          - Исправлен баг `hitbox.getXLength()` → ручное вычисление размеров
-          - Все easing функции работают корректно
-          - Адаптивная скорость проверена
-        files: |
-          build/libs/*.jar
+          ## Установка
+          
+          1. Скачайте .jar файл
+          2. Установите Fabric Loader для 1.21.11
+          3. Закиньте файл в папку `.minecraft/mods`
+          4. Запустите игру
+        files: build/libs/Naitigs-1.21.11.jar
+        draft: false
+        prerelease: false
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
