@@ -1,0 +1,71 @@
+name: Create Release
+on:
+  workflow_dispatch:
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - name: Get latest successful run ID
+        id: get_run
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const runs = await github.rest.actions.listWorkflowRuns({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'build.yml',
+              status: 'success',
+              per_page: 1
+            });
+            if (runs.data.workflow_runs.length === 0) {
+              core.setFailed('No successful runs found');
+              return;
+            }
+            const runId = runs.data.workflow_runs[0].id;
+            core.setOutput('run_id', runId);
+            
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: Naitigs-Jar
+          path: ./artifact
+          run-id: ${{ steps.get_run.outputs.run_id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Find JAR file
+        id: find_jar
+        run: |
+          JAR_FILE=$(find ./artifact -name "*.jar" | head -n 1)
+          if [ -z "$JAR_FILE" ]; then
+            echo "No JAR file found"
+            exit 1
+          fi
+          echo "jar_path=$JAR_FILE" >> $GITHUB_OUTPUT
+
+      - name: Create Release and Upload
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          JAR_FILE="${{ steps.find_jar.outputs.jar_path }}"
+          TAG="v1.0.0"
+          NAME="Naitigs Client $TAG - Minecraft 1.21.11"
+          BODY="## Changelog\n\n- ✅ Добавлен модуль AntiDarkness\n- ✅ Убирает эффект тьмы от Вардена\n- ✅ Убирает визуальный огонь при горении\n- ✅ Совместимость с Fabric 1.21.11\n\n## Установка\n\n1. Скачайте .jar файл\n2. Установите Fabric Loader для 1.21.11\n3. Закиньте файл в папку \`.minecraft/mods\`\n4. Запустите игру"
+          
+          for i in {0..9}; do
+            if [ "$i" -gt 0 ]; then
+              TAG="v1.0.$i"
+              NAME="Naitigs Client $TAG - Minecraft 1.21.11"
+            fi
+            
+            echo "Attempting to create release $TAG..."
+            if gh release create "$TAG" "$JAR_FILE#Naitigs-1.21.11.jar" --title "$NAME" --notes "$BODY" --target master; then
+              echo "Release $TAG created successfully!"
+              echo "RELEASE_TAG=$TAG" >> $GITHUB_ENV
+              break
+            else
+              echo "Failed to create $TAG, trying next..."
+            fi
+          done
