@@ -24,3 +24,4 @@ jobs:
       with:
         name: Naitigs-Jar
         path: build/libs/*.jar
+ # rebuild 
